@@ -10,11 +10,9 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 public class SleepService extends IntentService implements SensorEventListener {
-    private final String mode = "com.pac.sensor.service.extra.PARAM1";
+    private final String mode = "mode";
     private boolean shouldStop = false;
-
-    private float xForce;
-    private float yForce;
+    private float zLimit = 0;
     private float zForce;
 
     public SleepService() {
@@ -33,14 +31,9 @@ public class SleepService extends IntentService implements SensorEventListener {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            final String mode = intent.getStringExtra(this.mode)
-                    ;
-            SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-            Sensor mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
-
-            float zLimit = 0;
-
+            final String mode = intent.getStringExtra(this.mode);
+            setZLimit(mode);
+            setSensor();
 
             while (!shouldStop){
                 if (zForce < zLimit)
@@ -55,26 +48,29 @@ public class SleepService extends IntentService implements SensorEventListener {
         }
     }
 
+    private void setSensor(){
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Sensor mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
     private void setZLimit(String mode){
-//        switch (mode){
-//            case "high":
-//                zLimit = (float) 0.5;
-//                break;
-//            case "low":
-//                zLimit = (float) 2;
-//                break;
-//            default:
-//                zLimit = (float) 2;
-//        }
+        switch (mode){
+            case "high":
+                zLimit = (float) 0.5;
+                break;
+            case "low":
+                zLimit = (float) 2;
+                break;
+            default:
+                zLimit = (float) 4;
+        }
     }
 
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        xForce = event.values[0];
-        yForce = event.values[1];
         zForce = event.values[2];
-        Log.v("gravity", "asdff");
     }
 
     @Override

@@ -13,7 +13,7 @@ public class ShakeService extends IntentService implements SensorEventListener {
 
     private boolean shouldStop = false;
     private boolean isShakeDetected = false;
-    private final String mode = "com.pac.sensor.service.extra.PARAM1";
+    private final String mode = "mode";
     private static float accelerationLimit = 10;
 
     private float xAcceleration = 0;
