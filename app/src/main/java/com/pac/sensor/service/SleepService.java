@@ -10,25 +10,20 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 public class SleepService extends IntentService implements SensorEventListener {
-    private final String min = "com.pac.sensor.service.extra.PARAM1";
-    private final String max = "com.pac.sensor.service.extra.PARAM2";
+    private final String mode = "com.pac.sensor.service.extra.PARAM1";
     private boolean shouldStop = false;
 
     private float xForce;
     private float yForce;
     private float zForce;
 
-    private SensorManager sensorManager;
-    private Sensor mLight;
-
     public SleepService() {
         super("SleepService");
     }
 
-    public void startService(Context context, String max, String min) {
+    public void startService(Context context, String mode) {
         Intent intent = new Intent(context, SleepService.class);
-        intent.putExtra(this.min, max);
-        intent.putExtra(this.max, min);
+        intent.putExtra(this.mode, mode);
 
 
         context.startService(intent);
@@ -38,20 +33,39 @@ public class SleepService extends IntentService implements SensorEventListener {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            final String param1 = intent.getStringExtra(min);
-            final String param2 = intent.getStringExtra(max);
-            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-            mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            final String mode = intent.getStringExtra(this.mode)
+                    ;
+            SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            Sensor mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
+
+            float zLimit = 0;
+
+
             while (!shouldStop){
-                Log.v("gravity", Float.toString(zForce));
+                if (zForce < zLimit)
+                    Log.v("gravity", "successsssssssss");
+                    //TODO: code for lock the screen
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private void setZLimit(String mode){
+//        switch (mode){
+//            case "high":
+//                zLimit = (float) 0.5;
+//                break;
+//            case "low":
+//                zLimit = (float) 2;
+//                break;
+//            default:
+//                zLimit = (float) 2;
+//        }
     }
 
 
@@ -60,8 +74,7 @@ public class SleepService extends IntentService implements SensorEventListener {
         xForce = event.values[0];
         yForce = event.values[1];
         zForce = event.values[2];
-//        Log.v("gravity", Float.toString(zForce));
-        Log.v("gravity", "asdf");
+        Log.v("gravity", "asdff");
     }
 
     @Override

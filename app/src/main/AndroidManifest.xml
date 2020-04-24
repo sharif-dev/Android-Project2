@@ -10,8 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
+            android:name=".service.ShakeService"
+            android:exported="false"></service>
+        <service
             android:name=".service.SleepService"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.pac.sensor.service.ShakeService;
 import com.pac.sensor.service.SleepService;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,8 +21,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        SleepService sleepService = new SleepService();
-        sleepService.startService(this, "max", "min");
+//        SleepService sleepService = new SleepService();
+//        sleepService.startService(this, "low");
+
+        ShakeService shakeService = new ShakeService();
+        shakeService.startService(this, "low");
     }
 
 }
