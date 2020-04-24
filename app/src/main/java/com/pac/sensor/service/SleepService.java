@@ -3,89 +3,75 @@ package com.pac.sensor.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.util.Log;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
-public class SleepService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "com.pac.sensor.service.action.FOO";
-    private static final String ACTION_BAZ = "com.pac.sensor.service.action.BAZ";
+public class SleepService extends IntentService implements SensorEventListener {
+    private final String min = "com.pac.sensor.service.extra.PARAM1";
+    private final String max = "com.pac.sensor.service.extra.PARAM2";
+    private boolean shouldStop = false;
 
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "com.pac.sensor.service.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.pac.sensor.service.extra.PARAM2";
+    private float xForce;
+    private float yForce;
+    private float zForce;
+
+    private SensorManager sensorManager;
+    private Sensor mLight;
 
     public SleepService() {
         super("SleepService");
     }
 
-    /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
+    public void startService(Context context, String max, String min) {
         Intent intent = new Intent(context, SleepService.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
+        intent.putExtra(this.min, max);
+        intent.putExtra(this.max, min);
+
+
         context.startService(intent);
     }
 
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, SleepService.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
+            final String param1 = intent.getStringExtra(min);
+            final String param2 = intent.getStringExtra(max);
+            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            sensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
+            while (!shouldStop){
+                Log.v("gravity", Float.toString(zForce));
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionFoo(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        xForce = event.values[0];
+        yForce = event.values[1];
+        zForce = event.values[2];
+//        Log.v("gravity", Float.toString(zForce));
+        Log.v("gravity", "asdf");
     }
 
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionBaz(String param1, String param2) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+        // Do something here if sensor accuracy changes.
+    }
+
+    @Override
+    public void onDestroy() {
+        //sensorManager.unregisterListener(this);
+        super.onDestroy();
     }
 }
