@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Sensor</string>
     <string name="sleepingModeAngle">Sensor</string>
+    <string name="submit">SUBMIT</string>
 </resources>

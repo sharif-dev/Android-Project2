@@ -21,19 +21,60 @@ import com.pac.sensor.service.SleepService;
 
 public class MainActivity extends AppCompatActivity {
     private Switch sleepingSwitch;
+    private Switch shakingSwitch;
     private EditText sleepingAngle;
+    private EditText shakingPower;
     private Button sleepingAngleButton;
+    private Button shakingAngleButton;
     private final static int DEFAULT_ANGLE = 10;
+    private final static int DEFAULT_Shak_POWER= 1;
     private Intent sleepingServiceIntent;
+    private Intent shakingServiceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init_sleeping_mode();
+        init_shaking_mode();
+    }
 
-        ShakeService shakeService = new ShakeService();
-        shakeService.startService(this, "low");
+    private void init_shaking_mode(){
+        shakingSwitch = findViewById(R.id.shake_mode_sw);
+        shakingAngleButton = findViewById(R.id.shake_mode_btn);
+//        shakingAngle = findViewById(R.id.shak_mode_angle);
+
+        shakingAngleButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                resetShakingService(getAngle());
+            }
+        });
+
+        shakingSwitch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //Is the switch is on?
+                boolean on = ((Switch) v).isChecked();
+                if(on)
+                {
+                    resetShakingService(getAngle());
+                }
+                else
+                {
+                    if (shakingServiceIntent != null)
+                        stopService(shakingServiceIntent);
+                }
+            }
+        });
+    }
+
+    private void resetShakingService(double angle){
+        if (shakingServiceIntent != null)
+            stopService(shakingServiceIntent);
+        shakingServiceIntent = new Intent(MainActivity.this, SleepService.class);
+//        shakingServiceIntent.putExtra(getString(R.string.shakingModeAngle), angle);
+        startService(shakingServiceIntent);
     }
 
     private void init_sleeping_mode(){

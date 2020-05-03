@@ -9,6 +9,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 public class ShakeService extends IntentService implements SensorEventListener {
 
     private boolean shouldStop = false;
@@ -24,12 +26,13 @@ public class ShakeService extends IntentService implements SensorEventListener {
         super("ShakeService");
     }
 
-    public void startService(Context context, String mode) {
-        Intent intent = new Intent(context, ShakeService.class);
-        intent.putExtra(this.mode, mode);
-        context.startService(intent);
+    @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+//        Intent intent = new Intent(context, ShakeService.class);
+//        intent.putExtra(this.mode, mode);
+//        context.startService(intent);
+        return super.onStartCommand(intent, flags, startId);
     }
-
 
     @Override
     protected void onHandleIntent(Intent intent) {
