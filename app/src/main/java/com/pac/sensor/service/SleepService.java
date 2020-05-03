@@ -30,7 +30,7 @@ public class SleepService extends Service implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-            System.out.println("sensor changed");
+//            System.out.println("sensor changed");
         if (calAngle(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]) <= maxAngle){
             ((DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE)).lockNow();
             if (devicePolicyManager != null) {

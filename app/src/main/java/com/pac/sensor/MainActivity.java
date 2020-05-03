@@ -49,8 +49,10 @@ public class MainActivity extends AppCompatActivity {
         sleepingAngleButton = findViewById(R.id.submit_angle_button);
         sleepingAngle = findViewById(R.id.sleeping_mode_angle);
 
-        deviceManger = (DevicePolicyManager)
-                getSystemService(Context. DEVICE_POLICY_SERVICE ) ;
+        sleepingServiceIntent = new Intent(MainActivity.this, SleepService.class);
+        sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), getAngle());
+
+        deviceManger = (DevicePolicyManager) getSystemService(Context. DEVICE_POLICY_SERVICE ) ;
         compName = new ComponentName( this, DeviceAdmin. class ) ;
 
         sleepingAngleButton.setOnClickListener(new View.OnClickListener(){
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 disable();
                 enable();
+                System.out.println("END ONCLICK");
             }
         });
 
@@ -66,13 +69,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 boolean on = ((Switch) v).isChecked();
                 if(on)
-                {
                     enable();
-                }
                 else
-                {
                     disable();
-                }
             }
         });
     }
@@ -88,30 +87,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void enable () {
         boolean active = deviceManger .isAdminActive( compName ) ;
+        System.err.println("enable: " + deviceManger.isAdminActive(compName));
+
         if (active) {
             deviceManger .removeActiveAdmin( compName ) ;
         } else {
             Intent intent = new Intent(DevicePolicyManager. ACTION_ADD_DEVICE_ADMIN ) ;
             intent.putExtra(DevicePolicyManager. EXTRA_DEVICE_ADMIN , compName ) ;
-            intent.putExtra(DevicePolicyManager. EXTRA_ADD_EXPLANATION , "You should enable the app!" ) ;
+//            intent.putExtra(DevicePolicyManager. EXTRA_ADD_EXPLANATION , "You should enable the app!" ) ;
             startActivityForResult(intent , SLEEPING_MODE_REQ_CODE ) ;
         }
     }
+
 
     public void disable(){
         deviceManger = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
         try {
             compName = new ComponentName(MainActivity.this, DeviceAdmin.class);
             boolean active = deviceManger.isAdminActive(compName);
-            if (active) {
+            if (active)
                 deviceManger.removeActiveAdmin(compName);
-                stopService(sleepingServiceIntent);
-            } else {
-                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName);
-                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "You should enable the app!");
-                stopService(sleepingServiceIntent);
-            }
+            stopService(sleepingServiceIntent);
+            System.err.println("disable: " + deviceManger.isAdminActive(compName));
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -121,8 +118,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("ON ACTIVITY .. CALLED");
         if (requestCode == SLEEPING_MODE_REQ_CODE) {
+            System.out.println("REQ CODE OK");
             if (resultCode == Activity.RESULT_OK) {
+                System.out.println("RESULT OK");
                 sleepingSwitch.setChecked(true);
                 SleepService.devicePolicyManager = deviceManger;
                 sleepingServiceIntent = new Intent(MainActivity.this, SleepService.class);
