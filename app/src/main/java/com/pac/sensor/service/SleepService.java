@@ -59,7 +59,7 @@ public class SleepService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        maxAngle = (double) intent.getExtras().get(getString(R.string.sleepingModeAngle));
+        maxAngle = (double) intent.getExtras().get(getString(R.string.sleepingModeAngle)) * Math.PI / 180;
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         return super.onStartCommand(intent, flags, startId);
