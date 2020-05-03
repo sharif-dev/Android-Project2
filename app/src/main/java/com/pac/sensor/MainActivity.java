@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText sleepingAngle;
     private Button sleepingAngleButton;
     private final static int DEFAULT_ANGLE = 10;
+    private final static int SLEEPING_MODE_REQ_CODE = 10;
+
     private Intent sleepingServiceIntent;
 
     private ComponentName compName ;
@@ -50,15 +52,6 @@ public class MainActivity extends AppCompatActivity {
         deviceManger = (DevicePolicyManager)
                 getSystemService(Context. DEVICE_POLICY_SERVICE ) ;
         compName = new ComponentName( this, DeviceAdmin. class ) ;
-//        boolean active = deviceManger .isAdminActive( compName ) ;
-//        if (active) {
-//            btnEnable .setText( "Disable" ) ;
-//            btnLock .setVisibility(View. VISIBLE ) ;
-//        } else {
-//            btnEnable .setText( "Enable" ) ;
-//            btnLock .setVisibility(View. GONE ) ;
-//        }
-
 
         sleepingAngleButton.setOnClickListener(new View.OnClickListener(){
             @Override
