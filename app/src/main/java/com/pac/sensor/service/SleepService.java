@@ -26,15 +26,13 @@ public class SleepService extends Service implements SensorEventListener {
     public IBinder onBind(Intent intent) {
         return null;
     }
-private boolean flag = true;
+//private boolean flag = true;
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if(flag){
-            flag = false;
             System.out.println("sensor changed");
-//        if (calAngle(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]) <= maxAngle){
-//            ((DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE)).lockNow();
+        if (calAngle(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]) <= maxAngle){
+            ((DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE)).lockNow();
             if (devicePolicyManager != null) {
                 devicePolicyManager.lockNow();
             } else {

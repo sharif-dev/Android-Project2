@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText sleepingAngle;
     private Button sleepingAngleButton;
     private final static int DEFAULT_ANGLE = 10;
-    private final static int SLEEPING_MODE_REQ_CODE = 10;
+    private final static int SLEEPING_MODE_REQ_CODE = 11;
 
     private Intent sleepingServiceIntent;
 
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         sleepingAngleButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-//                resetSleepingService(getAngle());
+                disable();
                 enable();
             }
         });
@@ -67,14 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 boolean on = ((Switch) v).isChecked();
                 if(on)
                 {
-//                    resetSleepingService(getAngle());
                     enable();
                 }
                 else
                 {
                     disable();
-//                    if (sleepingServiceIntent != null)
-//                        stopService(sleepingServiceIntent);
                 }
             }
         });
@@ -89,24 +86,15 @@ public class MainActivity extends AppCompatActivity {
         return angle;
     }
 
-    private void resetSleepingService(double angle){
-        if (sleepingServiceIntent != null)
-            stopService(sleepingServiceIntent);
-        sleepingServiceIntent = new Intent(MainActivity.this, SleepService.class);
-        sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), angle);
-        startService(sleepingServiceIntent);
-    }
-
     public void enable () {
         boolean active = deviceManger .isAdminActive( compName ) ;
         if (active) {
             deviceManger .removeActiveAdmin( compName ) ;
         } else {
-            System.out.println("enableee");
             Intent intent = new Intent(DevicePolicyManager. ACTION_ADD_DEVICE_ADMIN ) ;
             intent.putExtra(DevicePolicyManager. EXTRA_DEVICE_ADMIN , compName ) ;
             intent.putExtra(DevicePolicyManager. EXTRA_ADD_EXPLANATION , "You should enable the app!" ) ;
-            startActivityForResult(intent , 11 ) ;
+            startActivityForResult(intent , SLEEPING_MODE_REQ_CODE ) ;
         }
     }
 
@@ -129,32 +117,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void lockPhone (View view) {
-        deviceManger .lockNow() ;
-    }
 
-//    private void stopSleepingService(){
-//        componentName = new ComponentName(MainActivity.this, DeviceAdmin.class);
-//        boolean active = devicePolicyManager.isAdminActive(componentName);
-//        if (active) {
-//            ((DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE)).removeActiveAdmin(componentName);
-//            stopService(sleepingServiceIntent);
-//        } else {
-//            stopService(sleepingServiceIntent);
-//        }
-//    }
-private double angle = 10;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("hereee");
-        if (requestCode == 11) {
-            System.out.println("hoora");
+        if (requestCode == SLEEPING_MODE_REQ_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                System.out.println("thereee");
                 sleepingSwitch.setChecked(true);
                 SleepService.devicePolicyManager = deviceManger;
-                sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), angle);
+                sleepingServiceIntent = new Intent(MainActivity.this, SleepService.class);
+                sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), getAngle());
                 startService(sleepingServiceIntent);
             } else {
                 sleepingSwitch.setChecked(false);
