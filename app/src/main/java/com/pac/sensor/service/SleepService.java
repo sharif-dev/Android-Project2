@@ -1,86 +1,69 @@
 package com.pac.sensor.service;
 
-import android.app.IntentService;
+import android.app.Service;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
+import android.os.IBinder;
+import androidx.annotation.Nullable;
 
-public class SleepService extends IntentService implements SensorEventListener {
-    private final String mode = "mode";
-    private boolean shouldStop = false;
-    private float zLimit = 0;
-    private float zForce;
+import com.pac.sensor.R;
 
-    public SleepService() {
-        super("SleepService");
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
+public class SleepService extends Service implements SensorEventListener {
+    private SensorManager sensorManager;
+    private double maxAngle;
+
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
-
-    public void startService(Context context, String mode) {
-        Intent intent = new Intent(context, SleepService.class);
-        intent.putExtra(this.mode, mode);
-
-
-        context.startService(intent);
-    }
-
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String mode = intent.getStringExtra(this.mode);
-            setZLimit(mode);
-            setSensor();
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (calAngle(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]) <= maxAngle){
+            ((DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE)).lockNow();
 
-            while (!shouldStop){
-                if (zForce < zLimit)
-                    Log.v("gravity", "successsssssssss");
-                    //TODO: code for lock the screen
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
-    private void setSensor(){
-        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor mLight = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    private void setZLimit(String mode){
-        switch (mode){
-            case "high":
-                zLimit = (float) 0.5;
-                break;
-            case "low":
-                zLimit = (float) 2;
-                break;
-            default:
-                zLimit = (float) 4;
-        }
-    }
-
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        zForce = event.values[2];
+    private double calAngle(double x, double y, double z){
+        return Math.abs(Math.acos(z / sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2))));
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-        // Do something here if sensor accuracy changes.
+
     }
 
     @Override
-    public void onDestroy() {
-        //sensorManager.unregisterListener(this);
+    public void onDestroy(){
+        sensorManager.unregisterListener(this);
         super.onDestroy();
     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        maxAngle = (double) intent.getExtras().get(getString(R.string.sleepingModeAngle));
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+
 }
