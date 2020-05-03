@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText sleepingAngle;
     private Button sleepingAngleButton;
     private final static int DEFAULT_ANGLE = 10;
-    private final static int SLEEPING_MODE_REQ_CODE = 11;
+    private final static int SLEEPING_MODE_REQ_CODE = 1;
 
     private Intent sleepingServiceIntent;
 
@@ -58,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
         sleepingAngleButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                disable();
-                enable();
-                System.out.println("END ONCLICK");
+                if (sleepingSwitch.isChecked()){
+                    sleepingSwitch.performClick();
+                }
             }
         });
 
@@ -87,14 +88,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void enable () {
         boolean active = deviceManger .isAdminActive( compName ) ;
-        System.err.println("enable: " + deviceManger.isAdminActive(compName));
-
         if (active) {
             deviceManger .removeActiveAdmin( compName ) ;
         } else {
             Intent intent = new Intent(DevicePolicyManager. ACTION_ADD_DEVICE_ADMIN ) ;
             intent.putExtra(DevicePolicyManager. EXTRA_DEVICE_ADMIN , compName ) ;
-//            intent.putExtra(DevicePolicyManager. EXTRA_ADD_EXPLANATION , "You should enable the app!" ) ;
             startActivityForResult(intent , SLEEPING_MODE_REQ_CODE ) ;
         }
     }
@@ -108,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
             if (active)
                 deviceManger.removeActiveAdmin(compName);
             stopService(sleepingServiceIntent);
-            System.err.println("disable: " + deviceManger.isAdminActive(compName));
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -118,11 +115,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("ON ACTIVITY .. CALLED");
         if (requestCode == SLEEPING_MODE_REQ_CODE) {
-            System.out.println("REQ CODE OK");
             if (resultCode == Activity.RESULT_OK) {
-                System.out.println("RESULT OK");
                 sleepingSwitch.setChecked(true);
                 SleepService.devicePolicyManager = deviceManger;
                 sleepingServiceIntent = new Intent(MainActivity.this, SleepService.class);
