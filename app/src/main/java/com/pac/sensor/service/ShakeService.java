@@ -11,11 +11,14 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.pac.sensor.R;
+
 public class ShakeService extends IntentService implements SensorEventListener {
+    private SensorManager sensorManager;
 
     private boolean shouldStop = false;
     private boolean isShakeDetected = false;
-    private final String mode = "mode";
+    private String mode = "mode";
     private static float accelerationLimit = 10;
 
     private float xAcceleration = 0;
@@ -28,10 +31,16 @@ public class ShakeService extends IntentService implements SensorEventListener {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-//        Intent intent = new Intent(context, ShakeService.class);
-//        intent.putExtra(this.mode, mode);
-//        context.startService(intent);
+        mode = (String) intent.getExtras().get(getString(R.string.sleepingModeAngle));
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
     }
 
     @Override
@@ -43,7 +52,7 @@ public class ShakeService extends IntentService implements SensorEventListener {
         while (!shouldStop) {
             if (isShakeDetected)
                 Log.v("Shake", "shake detected!!!!!!!!!!!");
-                //TODO: code for unlock the screen
+            //TODO: code for unlock the screen
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -52,13 +61,13 @@ public class ShakeService extends IntentService implements SensorEventListener {
         }
     }
 
-    private void setSensor(){
+    private void setSensor() {
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor mACCELEROMETER = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         sensorManager.registerListener(this, mACCELEROMETER, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    private void setAccelerationLimit(String mode){
+    private void setAccelerationLimit(String mode) {
         switch (mode) {
             case "high":
                 accelerationLimit = (float) 60;
@@ -87,12 +96,12 @@ public class ShakeService extends IntentService implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-        // Do something here if sensor accuracy changes.
     }
 
     @Override
     public void onDestroy() {
-        //sensorManager.unregisterListener(this);
+        sensorManager.unregisterListener(this);
         super.onDestroy();
     }
+
 }
