@@ -1,6 +1,7 @@
 package com.pac.sensor.service;
 
 import android.app.IntentService;
+import android.app.admin.DevicePolicyManager;
 import android.content.Intent;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -19,6 +20,7 @@ public class ShakeService extends IntentService implements SensorEventListener {
     private float xAcceleration = 0;
     private float yAcceleration = 0;
     private float zAcceleration = 0;
+    public static DevicePolicyManager devicePolicyManager;
 
     public ShakeService() {
         super("ShakeService");

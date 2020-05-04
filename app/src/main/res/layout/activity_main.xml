@@ -43,4 +43,12 @@
         android:text="Submit"
         app:layout_constraintTop_toBottomOf="@+id/sleeping_mode_angle"
         tools:layout_editor_absoluteX="69dp" />
+
+    <Switch
+        android:id="@+id/shaking_mode_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch"
+        tools:layout_editor_absoluteX="41dp"
+        tools:layout_editor_absoluteY="323dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
