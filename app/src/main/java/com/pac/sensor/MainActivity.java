@@ -6,10 +6,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.os.PowerManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,10 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private Switch shakingSwitch;
     private EditText sleepingAngle;
     private EditText shakingPower;
-    private Button sleepingAngleButton;
-    private Button shakingAngleButton;
 
-    //    private Switch shakingSwitch;
     private final static int DEFAULT_ANGLE = 10;
     private final static String DEFAULT_Shak_POWER = "low";
     private final static int SLEEPING_MODE_REQ_CODE = 1;
@@ -49,27 +49,31 @@ public class MainActivity extends AppCompatActivity {
 
     private void init_shaking_mode() {
         shakingSwitch = findViewById(R.id.shake_mode_sw);
-        shakingAngleButton = findViewById(R.id.shake_mode_btn);
-//        shakingAngle = findViewById(R.id.shak_mode_angle);
+        Button shakeBtn = findViewById(R.id.shake_mode_btn);
+        shakingPower = findViewById(R.id.shake_mode_tv);
 
-        shakingAngleButton.setOnClickListener(new View.OnClickListener() {
+        shakingServiceIntent = new Intent(MainActivity.this, ShakeService.class);
+
+        deviceManger = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+        shakingCompName = new ComponentName(this, DeviceAdmin.class);
+
+        shakeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetShakingService(getPower());
+                if (shakingSwitch.isChecked()) {
+                    shakingSwitch.performClick();
+                }
             }
         });
 
         shakingSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Is the switch is on?
                 boolean on = ((Switch) v).isChecked();
-                if (on) {
-                    resetShakingService(getPower());
-                } else {
-                    if (shakingServiceIntent != null)
-                        stopService(shakingServiceIntent);
-                }
+                if (on)
+                    enable(shakingCompName, SHAKING_MODE_REQ_CODE);
+                else
+                    disable(shakingServiceIntent);
             }
         });
     }
@@ -83,17 +87,9 @@ public class MainActivity extends AppCompatActivity {
         return power;
     }
 
-    private void resetShakingService(String power) {
-        if (shakingServiceIntent != null)
-            stopService(shakingServiceIntent);
-        shakingServiceIntent = new Intent(MainActivity.this, SleepService.class);
-        shakingServiceIntent.putExtra(getString(R.string.shakingModeAngle), power);
-        startService(shakingServiceIntent);
-    }
-
     private void init_sleeping_mode() {
         sleepingSwitch = findViewById(R.id.sleeping_mode_switch);
-        sleepingAngleButton = findViewById(R.id.submit_angle_button);
+        Button sleepingAngleButton = findViewById(R.id.submit_angle_button);
         sleepingAngle = findViewById(R.id.sleeping_mode_angle);
 
         sleepingServiceIntent = new Intent(MainActivity.this, SleepService.class);
@@ -116,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean on = ((Switch) v).isChecked();
                 if (on)
-                    enable(sleepingCompName);
+                    enable(sleepingCompName, SLEEPING_MODE_REQ_CODE);
                 else
                     disable(sleepingServiceIntent);
             }
@@ -132,14 +128,14 @@ public class MainActivity extends AppCompatActivity {
         return angle;
     }
 
-    public void enable(ComponentName componentName) {
-        boolean active = deviceManger.isAdminActive(sleepingCompName);
+    public void enable(ComponentName componentName, int requestCode) {
+        boolean active = deviceManger.isAdminActive(componentName);
         if (active) {
             deviceManger.removeActiveAdmin(componentName);
         } else {
             Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
             intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName);
-            startActivityForResult(intent, SLEEPING_MODE_REQ_CODE);
+            startActivityForResult(intent, requestCode);
         }
     }
 
@@ -173,8 +169,8 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (requestCode == SHAKING_MODE_REQ_CODE) {
             shakingSwitch.setChecked(true);
-            ShakeService.devicePolicyManager = deviceManger;
-            shakingServiceIntent = new Intent(MainActivity.this, SleepService.class);
+            shakingServiceIntent = new Intent(MainActivity.this, ShakeService.class);
+            shakingServiceIntent.putExtra(getString(R.string.shakingModePower), getPower());
             startService(shakingServiceIntent);
         }
     }
