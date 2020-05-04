@@ -19,19 +19,26 @@ import static java.lang.Math.sqrt;
 public class SleepService extends Service implements SensorEventListener {
     private SensorManager sensorManager;
     private double maxAngle;
-
+    public static DevicePolicyManager devicePolicyManager;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
+//private boolean flag = true;
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+//            System.out.println("sensor changed");
         if (calAngle(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]) <= maxAngle){
             ((DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE)).lockNow();
-
+            if (devicePolicyManager != null) {
+                devicePolicyManager.lockNow();
+            } else {
+                devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+                devicePolicyManager.lockNow();
+            }
         }
     }
 

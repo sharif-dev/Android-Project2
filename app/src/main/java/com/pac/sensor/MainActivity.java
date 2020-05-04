@@ -1,19 +1,17 @@
 package com.pac.sensor;
 
+import android.app.Activity;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.pac.sensor.service.ShakeService;
@@ -26,10 +24,20 @@ public class MainActivity extends AppCompatActivity {
     private EditText shakingPower;
     private Button sleepingAngleButton;
     private Button shakingAngleButton;
+
+    //    private Switch shakingSwitch;
     private final static int DEFAULT_ANGLE = 10;
     private final static String DEFAULT_Shak_POWER = "low";
+    private final static int SLEEPING_MODE_REQ_CODE = 1;
+    private final static int SHAKING_MODE_REQ_CODE = 2;
+
     private Intent sleepingServiceIntent;
     private Intent shakingServiceIntent;
+
+    private ComponentName sleepingCompName;
+    private ComponentName shakingCompName;
+
+    DevicePolicyManager deviceManger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,24 +96,29 @@ public class MainActivity extends AppCompatActivity {
         sleepingAngleButton = findViewById(R.id.submit_angle_button);
         sleepingAngle = findViewById(R.id.sleeping_mode_angle);
 
+        sleepingServiceIntent = new Intent(MainActivity.this, SleepService.class);
+        sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), getAngle());
+
+        deviceManger = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+        sleepingCompName = new ComponentName(this, DeviceAdmin.class);
+
         sleepingAngleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetSleepingService(getAngle());
+                if (sleepingSwitch.isChecked()) {
+                    sleepingSwitch.performClick();
+                }
             }
         });
 
         sleepingSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Is the switch is on?
                 boolean on = ((Switch) v).isChecked();
-                if (on) {
-                    resetSleepingService(getAngle());
-                } else {
-                    if (sleepingServiceIntent != null)
-                        stopService(sleepingServiceIntent);
-                }
+                if (on)
+                    enable(sleepingCompName);
+                else
+                    disable(sleepingServiceIntent);
             }
         });
     }
@@ -119,11 +132,50 @@ public class MainActivity extends AppCompatActivity {
         return angle;
     }
 
-    private void resetSleepingService(double angle) {
-        if (sleepingServiceIntent != null)
-            stopService(sleepingServiceIntent);
-        sleepingServiceIntent = new Intent(MainActivity.this, SleepService.class);
-        sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), angle);
-        startService(sleepingServiceIntent);
+    public void enable(ComponentName componentName) {
+        boolean active = deviceManger.isAdminActive(sleepingCompName);
+        if (active) {
+            deviceManger.removeActiveAdmin(componentName);
+        } else {
+            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName);
+            startActivityForResult(intent, SLEEPING_MODE_REQ_CODE);
+        }
+    }
+
+
+    public void disable(Intent intent) {
+        deviceManger = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+        try {
+            sleepingCompName = new ComponentName(MainActivity.this, DeviceAdmin.class);
+            boolean active = deviceManger.isAdminActive(sleepingCompName);
+            if (active)
+                deviceManger.removeActiveAdmin(sleepingCompName);
+            stopService(intent);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SLEEPING_MODE_REQ_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                sleepingSwitch.setChecked(true);
+                SleepService.devicePolicyManager = deviceManger;
+                sleepingServiceIntent = new Intent(MainActivity.this, SleepService.class);
+                sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), getAngle());
+                startService(sleepingServiceIntent);
+            } else {
+                sleepingSwitch.setChecked(false);
+            }
+        } else if (requestCode == SHAKING_MODE_REQ_CODE) {
+            shakingSwitch.setChecked(true);
+            ShakeService.devicePolicyManager = deviceManger;
+            shakingServiceIntent = new Intent(MainActivity.this, SleepService.class);
+            startService(shakingServiceIntent);
+        }
     }
 }
