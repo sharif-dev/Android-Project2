@@ -37,7 +37,8 @@ public class HeavySleepingService extends Service implements SensorEventListener
     }
 
     private void turnOff(){
-
+        //TODO remove alarm activity
+        onDestroy();
     }
 
     @Override
