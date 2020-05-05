@@ -2,6 +2,7 @@ package com.pac.sensor.service;
 
 import android.app.Service;
 import android.app.admin.DevicePolicyManager;
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -16,6 +17,7 @@ import com.pac.sensor.R;
 public class HeavySleepingService extends Service implements SensorEventListener {
     private SensorManager sensorManager;
     private double minRotationRate;
+
 
     @Nullable
     @Override
@@ -44,6 +46,19 @@ public class HeavySleepingService extends Service implements SensorEventListener
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy(){
+        sensorManager.unregisterListener(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
     }
 
 //    public static void setAlarm(Context context, long waitTimeMillis) {
