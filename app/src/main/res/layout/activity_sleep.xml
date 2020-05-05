@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+    <RelativeLayout
+        android:id="@+id/menu_bar"
+        android:layout_width="110dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/layout_right_border">
+        <ImageView
+            android:id="@+id/alarm"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_above="@+id/shake"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/alarm__clock"/>
+        <ImageView
+            android:id="@+id/shake"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/shake_phone"/>
+        <ImageView
+            android:background="@drawable/sleep"
+            android:id="@+id/sleep"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/shake"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/menu_bar">
+
+        <ImageView
+            android:background="@drawable/sleep"
+            android:id="@+id/shaking_phone"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_above="@id/toggle_switch"/>
+
+        <ImageView
+            android:background="@drawable/switch_off"
+            android:id="@+id/toggle_switch"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+
+        <EditText
+            android:id="@+id/lock_speed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:background="@color/background_light"
+            android:textStyle="italic"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:hint="@string/LockSpeed"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/toggle_switch"/>
+
+        <ImageView
+            android:background="@drawable/ok"
+            android:id="@+id/submit"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/lock_speed"
+            android:layout_marginTop="20dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
