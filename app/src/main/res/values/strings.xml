@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Sensor</string>
-    <string name="sleepingModeAngle">Sensor</string>
-    <string name="shakingModePower">Sensor</string>
+    <string name="sleepingModeAngle">angle</string>
+    <string name="shakingModePower">power</string>
     <string name="submit">SUBMIT</string>
+
+    <string name="HSModeRotationRate">rot_rate</string>
 </resources>

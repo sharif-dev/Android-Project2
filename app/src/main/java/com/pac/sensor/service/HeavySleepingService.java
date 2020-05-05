@@ -1,16 +1,49 @@
 package com.pac.sensor.service;
 
 import android.app.Service;
+import android.app.admin.DevicePolicyManager;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-public class HeavySleepingService extends Service {
+import com.pac.sensor.R;
+
+public class HeavySleepingService extends Service implements SensorEventListener {
+    private SensorManager sensorManager;
+    private double minRotationRate;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (sensorEvent.values[2] >= minRotationRate)
+            turnOff();
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    private void turnOff(){
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        minRotationRate = (double) intent.getExtras().get(getString(R.string.HSModeRotationRate)) * Math.PI / 180;
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
+        return super.onStartCommand(intent, flags, startId);
     }
 
 //    public static void setAlarm(Context context, long waitTimeMillis) {
