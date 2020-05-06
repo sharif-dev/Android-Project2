@@ -24,6 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DisplayShakeActivity" />
+        <activity android:name=".DisplayAlarmActivity" />
+        <activity android:name=".DisplaySleepActivity" />
+
         <receiver
             android:name=".DeviceAdmin"
             android:permission="android.permission.BIND_DEVICE_ADMIN">

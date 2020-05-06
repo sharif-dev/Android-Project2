@@ -9,25 +9,25 @@
         android:layout_height="match_parent"
         android:background="@drawable/layout_right_border">
         <ImageView
-            android:id="@+id/sleep_alarm"
+            android:id="@+id/alarm_alarm"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_above="@+id/sleep_shake"
+            android:layout_above="@+id/alarm_shake"
             android:layout_marginBottom="30dp"
             android:background="@drawable/alarm_clock"/>
         <ImageView
-            android:id="@+id/sleep_shake"
+            android:id="@+id/alarm_shake"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:layout_marginBottom="30dp"
             android:background="@drawable/shake_phone"/>
         <ImageView
-            android:background="@drawable/sleep"
-            android:id="@+id/sleep_sleep"
+            android:id="@+id/alarm_sleep"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/sleep_shake"/>
+            android:background="@drawable/sleep"
+            android:layout_below="@+id/alarm_shake"/>
     </RelativeLayout>
     <RelativeLayout
         android:orientation="vertical"
@@ -36,24 +36,26 @@
         android:layout_toEndOf="@+id/menu_bar">
 
         <ImageView
-            android:background="@drawable/sleep"
-            android:id="@+id/shaking_phone"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:layout_above="@id/sleep_toggle_switch"/>
-
-        <ImageView
             android:background="@drawable/switch_off"
-            android:id="@+id/sleep_toggle_switch"
+            android:id="@+id/alarm_toggle_switch"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"/>
+            android:layout_above="@id/time_picker"
+            android:layout_marginBottom="20dp"/>
+
+        <TimePicker
+            android:id="@+id/time_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:timePickerMode="clock"
+            android:numbersSelectorColor="@color/background_light"
+            android:headerBackground="@color/background_light"
+            android:layout_centerInParent="true"/>
 
         <EditText
-            android:id="@+id/angle"
+            android:id="@+id/alarm_off_speed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
@@ -62,17 +64,17 @@
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:textSize="20sp"
-            android:hint="@string/ScreenOnAngle"
+            android:hint="@string/OffSpeed"
             android:layout_marginTop="20dp"
-            android:layout_below="@+id/sleep_toggle_switch"/>
+            android:layout_below="@+id/time_picker"/>
 
         <ImageView
             android:background="@drawable/ok"
-            android:id="@+id/sleep_submit"
+            android:id="@+id/alarm_submit"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/angle"
+            android:layout_below="@id/alarm_off_speed"
             android:layout_marginTop="20dp"/>
 
     </RelativeLayout>

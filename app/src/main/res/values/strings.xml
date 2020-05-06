@@ -7,6 +7,6 @@
     <string name="HSModeRotationRate">rot_rate</string>
     <string name="Label">Alarm Name</string>
     <string name="OffSpeed">Rotation Speed To Stop Alarm</string>
-    <string name="LockSpeed">Rotation Speed To Lock Phone</string>
+    <string name="ScreenOnAngle">Rotation Angle To Turn On Screen</string>
     <string name="ShakingSensitivity">Shaking Sensitivity</string>
 </resources>

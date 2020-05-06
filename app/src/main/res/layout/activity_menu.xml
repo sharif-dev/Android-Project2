@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <ImageView
+        android:id="@+id/alarm"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_above="@+id/shake"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/alarm_clock"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:id="@+id/shake"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/shake_phone"/>
+
+    <ImageView
+        android:background="@drawable/sleep"
+        android:id="@+id/sleep"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/shake"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
