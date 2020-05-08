@@ -3,80 +3,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
-    <RelativeLayout
-        android:id="@+id/menu_bar"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:background="@drawable/layout_right_border">
-        <ImageView
-            android:id="@+id/alarm_alarm"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_above="@+id/alarm_shake"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/alarm_clock"/>
-        <ImageView
-            android:id="@+id/alarm_shake"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/shake_phone"/>
-        <ImageView
-            android:id="@+id/alarm_sleep"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/sleep"
-            android:layout_below="@+id/alarm_shake"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/menu_bar">
 
-        <ImageView
-            android:background="@drawable/switch_off"
-            android:id="@+id/alarm_toggle_switch"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@id/time_picker"
-            android:layout_marginBottom="20dp"/>
+    <ImageView
+        android:background="@drawable/alarm_clock"
+        android:id="@+id/ringing"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"/>
 
-        <TimePicker
-            android:id="@+id/time_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:timePickerMode="clock"
-            android:numbersSelectorColor="@color/background_light"
-            android:headerBackground="@color/background_light"
-            android:layout_centerInParent="true"/>
-
-        <EditText
-            android:id="@+id/alarm_off_speed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords"
-            android:background="@color/background_light"
-            android:textStyle="italic"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:hint="@string/OffSpeed"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/time_picker"/>
-
-        <ImageView
-            android:background="@drawable/ok"
-            android:id="@+id/alarm_submit"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/alarm_off_speed"
-            android:layout_marginTop="20dp"/>
-
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/countdown_timer"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:textColor="@color/background"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:layout_below="@id/ringing"
+        android:layout_centerHorizontal="true"
+        android:background="@color/background_light"
+        android:text="@string/countdown"
+        android:layout_marginTop="30dp"/>
 
 </RelativeLayout>

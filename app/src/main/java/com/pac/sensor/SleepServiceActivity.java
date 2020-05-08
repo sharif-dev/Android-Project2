@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.pac.sensor.service.SleepService;
 
 @SuppressLint("Registered")
-public class DisplaySleepActivity extends AppCompatActivity
+public class SleepServiceActivity extends AppCompatActivity
 {
     private ImageView toggleSwitch;
     private EditText angleText;
@@ -74,7 +74,7 @@ public class DisplaySleepActivity extends AppCompatActivity
 
     private void init_sleeping_mode()
     {
-        sleepingServiceIntent = new Intent(DisplaySleepActivity.this, SleepService.class);
+        sleepingServiceIntent = new Intent(SleepServiceActivity.this, SleepService.class);
         sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), getAngle());
 
         deviceManger = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
@@ -140,7 +140,7 @@ public class DisplaySleepActivity extends AppCompatActivity
         deviceManger = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
         try
         {
-            sleepingCompName = new ComponentName(DisplaySleepActivity.this, DeviceAdmin.class);
+            sleepingCompName = new ComponentName(SleepServiceActivity.this, DeviceAdmin.class);
             boolean active = deviceManger.isAdminActive(sleepingCompName);
             if (active)
                 deviceManger.removeActiveAdmin(sleepingCompName);
@@ -161,7 +161,7 @@ public class DisplaySleepActivity extends AppCompatActivity
             toggleSwitch.setImageResource(R.drawable.switch_on);
             toggleSwitch.setTag(R.drawable.switch_on);
             SleepService.devicePolicyManager = deviceManger;
-            sleepingServiceIntent = new Intent(DisplaySleepActivity.this, SleepService.class);
+            sleepingServiceIntent = new Intent(SleepServiceActivity.this, SleepService.class);
             sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), getAngle());
             startService(sleepingServiceIntent);
         }
@@ -176,11 +176,11 @@ public class DisplaySleepActivity extends AppCompatActivity
     {
         Intent intent = null;
         if( activity.equals("alarm") )
-            intent = new Intent(this, DisplayAlarmActivity.class);
+            intent = new Intent(this, HeavySleepingServiceActivity.class);
         if( activity.equals("shake") )
-            intent = new Intent(this, DisplayShakeActivity.class);
+            intent = new Intent(this, ShakeServiceActivity.class);
         if( activity.equals("sleep") )
-            intent = new Intent(this, DisplaySleepActivity.class);
+            intent = new Intent(this, SleepServiceActivity.class);
         saveState();
         startActivity(intent);
     }

@@ -1,25 +1,9 @@
 package com.pac.sensor;
 
-import android.app.Activity;
-import android.app.admin.DevicePolicyManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.os.PowerManager;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.pac.sensor.service.ShakeService;
-import com.pac.sensor.service.SleepService;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -58,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         ServicesData.SLEEP_SERVICE_DATA.put("toggleSwitch", "off");
         ServicesData.SLEEP_SERVICE_DATA.put("angle", "Rotation Angle To Turn On Screen");
 
-        Intent intent = new Intent(this, DisplayAlarmActivity.class);
+        Intent intent = new Intent(this, HeavySleepingServiceActivity.class);
         startActivity(intent);
 //        init_sleeping_mode();
 //        init_shaking_mode();

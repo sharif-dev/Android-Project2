@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pac.sensor">
+
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
@@ -24,9 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DisplayShakeActivity" />
-        <activity android:name=".DisplayAlarmActivity" />
-        <activity android:name=".DisplaySleepActivity" />
+        <activity android:name=".ShakeServiceActivity" />
+        <activity android:name=".HeavySleepingServiceActivity" />
+        <activity android:name=".SleepServiceActivity" />
+        <activity android:name=".AlarmActivity" />
 
         <receiver
             android:name=".DeviceAdmin"

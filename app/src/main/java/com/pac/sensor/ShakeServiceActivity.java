@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.pac.sensor.service.ShakeService;
 
 
-public class DisplayShakeActivity extends AppCompatActivity
+public class ShakeServiceActivity extends AppCompatActivity
 {
     private ImageView toggleSwitch;
     private EditText shakingSensitivity;
@@ -70,7 +70,7 @@ public class DisplayShakeActivity extends AppCompatActivity
 
     private void init_shaking_mode()
     {
-        shakingServiceIntent = new Intent(DisplayShakeActivity.this, ShakeService.class);
+        shakingServiceIntent = new Intent(ShakeServiceActivity.this, ShakeService.class);
 
         deviceManger = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         shakingCompName = new ComponentName(this, DeviceAdmin.class);
@@ -136,7 +136,7 @@ public class DisplayShakeActivity extends AppCompatActivity
         deviceManger = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
         try
         {
-            shakingCompName = new ComponentName(DisplayShakeActivity.this, DeviceAdmin.class);
+            shakingCompName = new ComponentName(ShakeServiceActivity.this, DeviceAdmin.class);
             boolean active = deviceManger.isAdminActive(shakingCompName);
             if (active)
                 deviceManger.removeActiveAdmin(shakingCompName);
@@ -152,7 +152,7 @@ public class DisplayShakeActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        shakingServiceIntent = new Intent(DisplayShakeActivity.this, ShakeService.class);
+        shakingServiceIntent = new Intent(ShakeServiceActivity.this, ShakeService.class);
         shakingServiceIntent.putExtra(getString(R.string.shakingModePower), getPower());
         startService(shakingServiceIntent);
     }
@@ -161,11 +161,11 @@ public class DisplayShakeActivity extends AppCompatActivity
     {
         Intent intent = null;
         if( activity.equals("alarm") )
-            intent = new Intent(this, DisplayAlarmActivity.class);
+            intent = new Intent(this, HeavySleepingServiceActivity.class);
         if( activity.equals("shake") )
-            intent = new Intent(this, DisplayShakeActivity.class);
+            intent = new Intent(this, ShakeServiceActivity.class);
         if( activity.equals("sleep") )
-            intent = new Intent(this, DisplaySleepActivity.class);
+            intent = new Intent(this, SleepServiceActivity.class);
         saveState();
         startActivity(intent);
     }

@@ -9,4 +9,12 @@
     <string name="OffSpeed">Rotation Speed To Stop Alarm</string>
     <string name="ScreenOnAngle">Rotation Angle To Turn On Screen</string>
     <string name="ShakingSensitivity">Shaking Sensitivity</string>
+    <string-array name="ringtone_array">
+        <item>Ringtone 1</item>
+        <item>Ringtone 2</item>
+        <item>Ringtone 3</item>
+        <item>Ringtone 4</item>
+    </string-array>
+    <string name="ChooseRingtone">Select A Ringtone</string>
+    <string name="countdown">10:00</string>
 </resources>
