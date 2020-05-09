@@ -32,7 +32,7 @@ public class ShakeService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        String mode = (String) intent.getExtras().get(getString(R.string.shakingModePower));
+        String mode = (String) intent.getExtras().get(getString(R.string.ShakingSensitivity));
         setAccelerationLimit(mode);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         return super.onStartCommand(intent, flags, startId);

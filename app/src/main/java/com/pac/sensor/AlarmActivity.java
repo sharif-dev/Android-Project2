@@ -40,16 +40,16 @@ public class AlarmActivity extends AppCompatActivity
 
         switch (ringtone)
         {
-            case "Ringtone_1":
+            case "Ringtone 1":
                 player = MediaPlayer.create(this, R.raw.ringtone1);
                 break;
-            case "Ringtone_2":
+            case "Ringtone 2":
                 player = MediaPlayer.create(this, R.raw.ringtone2);
                 break;
-            case "Ringtone_3":
+            case "Ringtone 3":
                 player = MediaPlayer.create(this, R.raw.ringtone3);
                 break;
-            case "Ringtone_4":
+            case "Ringtone 4":
                 player = MediaPlayer.create(this, R.raw.ringtone4);
                 break;
         }

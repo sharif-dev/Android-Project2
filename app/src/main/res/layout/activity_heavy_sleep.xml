@@ -65,7 +65,8 @@
             android:hint="@string/OffSpeed"
             android:layout_marginTop="20dp"
             android:layout_below="@+id/time_picker"
-            android:textColor="@color/background"/>
+            android:textColor="@color/background"
+            android:inputType="number"/>
 
         <Spinner
             android:id="@+id/ringtone_spinner"

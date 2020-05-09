@@ -14,9 +14,16 @@
         android:theme="@style/AppTheme">
         <service
             android:name=".service.ShakeService"
-            android:exported="false"></service>
+            android:exported="false"
+            android:enabled="true"/>
         <service
             android:name=".service.SleepService"
+            android:exported="true"
+            android:enabled="true"/>
+
+        <receiver
+            android:name=".service.HeavySleepingService"
+            android:enabled="true"
             android:exported="true" />
 
         <activity android:name=".MainActivity">

@@ -75,7 +75,7 @@ public class SleepServiceActivity extends AppCompatActivity
     private void init_sleeping_mode()
     {
         sleepingServiceIntent = new Intent(SleepServiceActivity.this, SleepService.class);
-        sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), getAngle());
+        sleepingServiceIntent.putExtra(getString(R.string.ScreenOnAngle), getAngle());
 
         deviceManger = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         sleepingCompName = new ComponentName(this, DeviceAdmin.class);
@@ -162,7 +162,7 @@ public class SleepServiceActivity extends AppCompatActivity
             toggleSwitch.setTag(R.drawable.switch_on);
             SleepService.devicePolicyManager = deviceManger;
             sleepingServiceIntent = new Intent(SleepServiceActivity.this, SleepService.class);
-            sleepingServiceIntent.putExtra(getString(R.string.sleepingModeAngle), getAngle());
+            sleepingServiceIntent.putExtra(getString(R.string.ScreenOnAngle), getAngle());
             startService(sleepingServiceIntent);
         }
         else

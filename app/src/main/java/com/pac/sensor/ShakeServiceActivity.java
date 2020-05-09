@@ -153,7 +153,7 @@ public class ShakeServiceActivity extends AppCompatActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
         shakingServiceIntent = new Intent(ShakeServiceActivity.this, ShakeService.class);
-        shakingServiceIntent.putExtra(getString(R.string.shakingModePower), getPower());
+        shakingServiceIntent.putExtra(getString(R.string.ShakingSensitivity), getPower());
         startService(shakingServiceIntent);
     }
 

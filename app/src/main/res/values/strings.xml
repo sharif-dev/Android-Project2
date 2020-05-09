@@ -1,11 +1,6 @@
 <resources>
     <string name="app_name">Sensor</string>
-    <string name="sleepingModeAngle">angle</string>
-    <string name="shakingModePower">power</string>
-    <string name="submit">SUBMIT</string>
 
-    <string name="HSModeRotationRate">rot_rate</string>
-    <string name="Label">Alarm Name</string>
     <string name="OffSpeed">Rotation Speed To Stop Alarm</string>
     <string name="ScreenOnAngle">Rotation Angle To Turn On Screen</string>
     <string name="ShakingSensitivity">Shaking Sensitivity</string>

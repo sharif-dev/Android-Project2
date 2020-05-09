@@ -122,10 +122,12 @@ public class HeavySleepingServiceActivity extends AppCompatActivity implements S
         calendar.set(Calendar.SECOND, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, HeavySleepingService.class);
-        intent.putExtra("RINGTONE", ringtone);
+        intent.putExtra("RINGTONE", ringtoneSpinner.getSelectedItem().toString());
         intent.putExtra("SPEED", speed.getText().toString());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Toast.makeText(HeavySleepingServiceActivity.this,
+                "Alarm has been set", Toast.LENGTH_SHORT).show();
     }
 
     private void disable()
